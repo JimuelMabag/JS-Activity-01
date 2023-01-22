@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Bootstrap + JavaScript!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ljJrGJ0brEOQL21YJ1O7gdaRGuBN0Rzv4N0QxwR9qlJQkju8EEEM39fAhP25RNiJMcX0qg4QubTelLyixx4KOidxICN2uaF513QZGoiZ5kQeaF7PfXLGghfkKv6axvsM0PPmv90_7ZzE06p--WVMO3QK005VW6DxJKY63KZRIRriSRsbRq5SlDjj4d6q6KuMAVkL1nUNMM_Z-Pd8nX7l-AmZhr_L46kb9QEI1MzofAealsbOuAmQcmSICwPaCbe6RWvvRPVvvdAfB8sAiV5gqI4WXFVMSHVREocZSMPsAFg0G8MhUSOzzOytmwZEgC3DDPxkfR6VfSdqG83bY-RVIq91qVSlW9Wf8V9Xzi0wVM3Zna4JrjvKxERg2C4YNRpr1qXoLVtIhZ031nE8PIy0vxpw92r3dYzSWZ97yADtF4ZZDs-7qT3EMhf67IcbeoodFdjwcjLFRjJIeE80trFDiXD8qdsG5vKpiHt_8EVzgNEVMUBxCGeoqRx1DPo_9aS_" charset="UTF-8"></script><style>
+    .dog-pic{
+      width: 90%
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card-group">
+  </div>
+</body>
+<script>
+  const DATA = localStorage.getItem('myDogsList')
+  class myJavaScriptClass {
+    constructor(data){
+      this.data = data;
+      this.cardsContainer = document.getElementsByClassName('card-group')
+      this.pictures = {
+        dog: 'https://thumbs.dreamstime.com/z/vector-silhouette-dog-sunset-81020416.jpg',
+        plus: 'https://pngimg.com/uploads/plus/plus_PNG106.png'
+      }
+      this.init();
+    }
+    init(){
+      const addCard = document.createElement('div')
+      addCard.classList.add('card')
+      addCard.innerHTML = `
+        <div class="card-body" style="text-align: center">
+            <img src="${this.pictures.plus}" alt="">
+            <br>
+            <button id="add-btn" class="btn btn-success">ADD NEW CARD</button>
+        </div>
+      `
+      if(this.cardsContainer && this.cardsContainer[0]){
+        this.cardsContainer[0].append(addCard)
+        this.addNewCardListener('add-btn')
+      }
+      if(this.data && this.data.length){
+        for(let i = 0; i < this.data.length; i++){
+          this.addNewCard(false);
+        }
+      }
+    } //here we created/rendered our add button card
+    addNewCardListener(addBtnID){
+      const addBtn = document.getElementById(addBtnID)
+      if(addBtn)
+        addBtn.addEventListener('click', this.addNewCard.bind(this))
+    } // here we attach addNewCard function to add new card button
+    addNewCard(isClicked){
+      this.cardsContainer = document.getElementsByClassName('card-group')
+      const dataCard = document.createElement('div')
+      dataCard.classList.add('card')
+      dataCard.innerHTML = `
+        <div class="card-body" style="text-align: center">
+            <img class="dog-pic" src="${this.pictures.dog}" alt="">
+            <br>
+            <h4 class="card-title">Card Title</h4>
+            <br>
+            <p class="card-text">Card description</p>
+            <button class="btn btn-danger card-delete-reference" onclick="myNewJSClass.delete(this)">DELETE CARD</button>
+        </div>
+      `
+      const currentElements = this.cardsContainer[0];
+      if(currentElements){
+        currentElements.insertBefore(dataCard, currentElements.children[currentElements.children.length -1])
+        let myCurrentStorage = JSON.parse(localStorage.getItem('myDogsList'))
+        if(myCurrentStorage)
+          myCurrentStorage.push({})
+        else{
+          myCurrentStorage = [{}]
+        }
+        if(isClicked)
+          localStorage.setItem('myDogsList', JSON.stringify(myCurrentStorage))
+      }
+    } // here we created/rendered new elements after clicking add new card
+    delete(element){
+      element.parentElement.parentElement.remove()
+      const myCurrentStorage = JSON.parse(localStorage.getItem('myDogsList'))
+      myCurrentStorage.pop()
+      localStorage.setItem('myDogsList', JSON.stringify(myCurrentStorage))
+    } // here we added delete whole card on click of delete card button
+  }
+
+  const myNewJSClass = new myJavaScriptClass(JSON.parse(DATA));
+</script>
+</html>
